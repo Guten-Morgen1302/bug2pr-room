@@ -1,0 +1,117 @@
+[
+  {
+    "id": "cold",
+    "dur": 6
+  },
+  {
+    "id": "logo",
+    "dur": 4
+  },
+  {
+    "id": "problem",
+    "dur": 8
+  },
+  {
+    "id": "repo",
+    "clips": [
+      "c01_repo"
+    ]
+  },
+  {
+    "id": "console",
+    "clips": [
+      "c02a_tpl",
+      "c02u_use",
+      "c02b_create"
+    ]
+  },
+  {
+    "id": "join",
+    "clips": [
+      "c03_join"
+    ]
+  },
+  {
+    "id": "bug",
+    "clips": [
+      "c04a_bug",
+      "c04b_repro"
+    ]
+  },
+  {
+    "id": "rule",
+    "clips": [
+      "c05_rule"
+    ]
+  },
+  {
+    "id": "patch",
+    "clips": [
+      "c06_patch"
+    ]
+  },
+  {
+    "id": "reject",
+    "clips": [
+      "c07_reject"
+    ]
+  },
+  {
+    "id": "fix",
+    "clips": [
+      "c08a_fix",
+      "c08b_422"
+    ]
+  },
+  {
+    "id": "accept",
+    "clips": [
+      "c09_accept"
+    ]
+  },
+  {
+    "id": "gate",
+    "clips": [
+      "c10a_softy",
+      "c10b_creator"
+    ]
+  },
+  {
+    "id": "merge",
+    "clips": [
+      "c11_merge"
+    ]
+  },
+  {
+    "id": "closed",
+    "clips": [
+      "c12_closed"
+    ]
+  },
+  {
+    "id": "phone",
+    "clips": [
+      "p1_profile",
+      "p2_email"
+    ]
+  },
+  {
+    "id": "engine",
+    "dur": 12
+  },
+  {
+    "id": "stats",
+    "dur": 9
+  },
+  {
+    "id": "repoend",
+    "clips": [
+      "c13_readme"
+    ],
+    "max": 7
+  },
+  {
+    "id": "end",
+    "dur": 7
+  }
+]

@@ -1,0 +1,22 @@
+{
+ "c01_repo": 5.9,
+ "c02a_tpl": 2.733,
+ "c02b_create": 3.5,
+ "c02u_use": 2.867,
+ "c03_join": 6.0,
+ "c04a_bug": 7.0,
+ "c04b_repro": 7.0,
+ "c05_rule": 6.267,
+ "c06_patch": 9.0,
+ "c07_reject": 11.0,
+ "c08a_fix": 5.0,
+ "c08b_422": 5.0,
+ "c09_accept": 7.067,
+ "c10a_softy": 7.2,
+ "c10b_creator": 6.0,
+ "c11_merge": 10.0,
+ "c12_closed": 6.667,
+ "c13_readme": 9.0,
+ "p1_profile": 6.366,
+ "p2_email": 1.767
+}

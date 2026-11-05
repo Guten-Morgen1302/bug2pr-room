@@ -2,3 +2,12 @@
 node_modules/
 *.log
 .env
+# raw and rendered video are too large for git
+video/raw/*
+video/out/*
+!video/raw/.gitkeep
+!video/out/.gitkeep
+video/node_modules/
+video/public/clips/
+video/out/
+video/raw/
