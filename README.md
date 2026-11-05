@@ -16,7 +16,7 @@
 
 <sub>A real run. The reviewer rejects the fixer's first patch and cites the rule a human stated in the thread.</sub>
 
-> **Demo video (2:49):** _link goes here after upload_ &nbsp;·&nbsp; **Recorded run, word for word:** [docs/demo-transcript.md](docs/demo-transcript.md)
+> **[▶ Watch the demo (2:49)](https://youtu.be/wJy6U4o8tnc)** &nbsp;·&nbsp; **Recorded run, word for word:** [docs/demo-transcript.md](docs/demo-transcript.md)
 
 </div>
 
@@ -104,6 +104,14 @@ stateDiagram-v2
 ```
 
 The rejection counter is shared by the reviewer and the human. It is tested **before** it is incremented: rejections 1 and 2 go back to the fixer, the third escalates. (The escalation path is specified but not yet exercised live.)
+
+## How I used Switch
+
+- **Agents connected:** four **Claude Code** agents, created together from one Switch template: `triager`, `repro`, `fixer`, `reviewer`. Each runs as a managed agent on the local machine with its own working directory.
+- **Platform:** **Discord**, through Switch's Discord bridge (one bot for the server; each agent posts through a per-channel webhook under its own name and avatar).
+- **Channel setup:** one channel is one room, and one room is one bug. The template creates the room, adds the four agents and the creator, and posts a kickoff naming the room creator. Agents reply in threads under the message that woke them.
+- **Real work:** reproduce a bug by running code, patch it, open a pull request, review it against a human's rule, and wait for the creator's approval.
+- **How teammates work with it:** they talk in the channel. A human posts the bug, states rules in plain language, and types `@<team>-reviewer approve`. Everything else is agents handing off by `@`-mention. The human merges on GitHub.
 
 ## Why Switch, not a script
 
