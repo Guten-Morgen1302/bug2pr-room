@@ -31,3 +31,11 @@ Two columns: what the Switch docs say (read 2026-11-01, Switch 0.31 docs) and wh
 - Agent replies land in a Discord thread under the human's message; each agent clones into its own workspace dir (~/.switch/agents/<server>/<name>). ~1 min from bug report to repro waking.
 - Full loop ran with no human help beyond the bug report, constraint and approve: report -> repro -> fix -> review (3/3 tests, compat, 3 constraints cited) -> REVIEW_PASSED -> approve. Fixer found the correct patch first time, so no rejection occurred (needs obvious-patch hint).
 - Handoff messages must be self-contained: a woken thread has no room history.
+
+## Findings from the live runs (2026-11-05)
+- Switch does NOT substitute `{params}` inside agent `instructions` (it does in names, room, kickoff). Values are baked at build time by `scripts/build-template.mjs`.
+- Agents that run the cloned repo's code from GitHub are refused by Claude Code's "external code" check unless the agent has `auto_approve: true`. Applied to repro, fixer and reviewer; the triager runs no code and keeps prompts.
+- Apps started from the Start menu do not see env vars set with `setx` until sign-out, so `push-pr` finds the `gh` CLI itself.
+- Full arc verified live: report -> repro (ran the code) -> tempting patch -> constraint -> reviewer REJECT citing the constraint -> corrected patch -> ACCEPT -> non-creator `approve` ignored -> creator `approve` accepted -> APPROVED_PENDING_MERGE.
+- The reviewer, not the fixer, relayed the late constraint; the fixer self-corrected before the verdict. Expect take-to-take variation.
+- Console's 60s request timeout shows "Nothing was created" while the server finishes creating everything (~70s). Do not click Retry.

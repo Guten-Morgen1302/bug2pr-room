@@ -5,8 +5,12 @@
 import { spawnSync } from 'node:child_process';
 
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : d; };
-// Token: GITHUB_TOKEN, else (BUG2PR_USE_GH=1) the logged-in gh CLI. Repo: BUG2PR_GH_REPO, else parsed from the clone's origin URL.
-const token = process.env.GITHUB_TOKEN || (process.env.BUG2PR_USE_GH ? spawnSync('gh', ['auth', 'token'], { encoding: 'utf8', shell: true }).stdout.trim() : '');
+// Token: GITHUB_TOKEN, else the logged-in gh CLI (found on PATH or in scoop's shims; set BUG2PR_NO_GH=1 to force dry-run).
+// Repo: BUG2PR_GH_REPO, else parsed from the clone's origin URL.
+const ghBin = () => [process.env.BUG2PR_GH_BIN, 'gh', `${process.env.USERPROFILE ?? ''}/scoop/shims/gh.exe`].filter(Boolean)
+  .find((b) => spawnSync(b, ['--version'], { encoding: 'utf8' }).status === 0);
+const ghToken = () => { const b = process.env.BUG2PR_NO_GH ? null : ghBin(); return b ? spawnSync(b, ['auth', 'token'], { encoding: 'utf8' }).stdout.trim() : ''; };
+const token = process.env.GITHUB_TOKEN || ghToken();
 const dry = process.argv.includes('--dry-run') || !token;
 const repo = arg('repo'), branch = arg('branch'), base = arg('base', 'main');
 const die = (code, fix) => { console.error(`${code}: ${fix}`); process.exit(1); };

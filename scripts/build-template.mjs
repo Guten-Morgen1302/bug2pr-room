@@ -9,6 +9,8 @@ const repo = arg('repo', 'https://github.com/Guten-Morgen1302/bug2pr-demo.git');
 const pushpr = arg('pushpr', fileURLToPath(new URL('./push-pr.mjs', import.meta.url)).replaceAll(String.fromCharCode(92), '/'));
 const edge = arg('edge', fileURLToPath(new URL('../demo-app/edge/compat.mjs', import.meta.url)).replaceAll(String.fromCharCode(92), '/'));
 const hintArg = arg('hint', 'Start with the simplest change that fixes the reported input: make the slug regex unicode-aware, with the Unicode property classes for letters and digits. Ship it if the reported input now works.');
+// Agents that run the cloned repo's code need Claude Code's permission prompts off (bypass), else its safety check refuses external code. Pass --no-bypass to keep prompts.
+const bypass = !process.argv.includes('--no-bypass');
 const hint = hintArg === 'none' ? '' : hintArg;
 const bake = (s) => s.replaceAll('{team}', team).replaceAll('{repo}', repo).replaceAll('{pushpr}', pushpr).replaceAll('{hint}', hint).replaceAll('{edge}', edge);
 const read = (f) => readFileSync(new URL(`../agents/${f}.md`, import.meta.url), 'utf8').trim();
@@ -27,7 +29,7 @@ const agents = roles.map(([r, desc]) => `  - name: "${team}-${r}"
     location: "{location}"
     directory: "{$agents_dir}/${team}-${r}"
     isolation: isolated
-    addressing: anyone
+${bypass && r !== 'triager' ? '    auto_approve: true' + String.fromCharCode(10) : ''}    addressing: anyone
     instructions: |
 ${indent(bake(`${read(r)}\n\n${shared}`))}`).join('\n');
 
