@@ -11,6 +11,7 @@ const ghBin = () => [process.env.BUG2PR_GH_BIN, 'gh', `${process.env.USERPROFILE
   .find((b) => spawnSync(b, ['--version'], { encoding: 'utf8' }).status === 0);
 const ghToken = () => { const b = process.env.BUG2PR_NO_GH ? null : ghBin(); return b ? spawnSync(b, ['auth', 'token'], { encoding: 'utf8' }).stdout.trim() : ''; };
 const token = process.env.GITHUB_TOKEN || ghToken();
+const API = process.env.BUG2PR_GH_API ?? 'https://api.github.com'; // override only for local tests
 const dry = process.argv.includes('--dry-run') || !token;
 const repo = arg('repo'), branch = arg('branch'), base = arg('base', 'main');
 const die = (code, fix) => { console.error(`${code}: ${fix}`); process.exit(1); };
@@ -29,11 +30,18 @@ if (dry) {
   console.log(`PR (dry-run): branch ${branch} @ ${head.slice(0, 7)} pushed to origin; no GitHub token, no PR opened. SHA: ${head}`);
 } else {
   const ghRepo = process.env.BUG2PR_GH_REPO || git('remote', 'get-url', 'origin').stdout.trim().replace(/^.*github\.com[:/]/, '').replace(/\.git$/, '');
-  const r = await fetch(`https://api.github.com/repos/${ghRepo}/pulls`, {
+  const r = await fetch(`${API}/repos/${ghRepo}/pulls`, {
     method: 'POST',
     headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json' },
     body: JSON.stringify({ title: `Fix: ${branch}`, head: branch, base, body: `Opened by push-pr at ${head}` }),
   });
+  if (r.status === 422) {
+    // A PR for this branch already exists (a revised push): report it instead of failing.
+    const owner = ghRepo.split('/')[0];
+    const ex = await fetch(`${API}/repos/${ghRepo}/pulls?head=${owner}:${branch}&state=open`, { headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json' } });
+    const open = ex.ok ? await ex.json() : [];
+    if (open.length) { console.log(`PR: ${open[0].html_url} (updated) SHA: ${head}`); process.exit(0); }
+  }
   if (!r.ok) die('E_GH_PR', `GitHub said ${r.status}. Check token scope (contents + pull requests write) and repo name`);
   console.log(`PR: ${(await r.json()).html_url} SHA: ${head}`);
 }
