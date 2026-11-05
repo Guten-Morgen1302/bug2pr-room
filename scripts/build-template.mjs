@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : d; };
 const team = arg('team', 'bug');
-const repo = arg('repo', 'C:/Users/harsh/bug2pr-demo/origin.git');
+const repo = arg('repo', 'https://github.com/Guten-Morgen1302/bug2pr-demo.git');
 const pushpr = arg('pushpr', fileURLToPath(new URL('./push-pr.mjs', import.meta.url)).replaceAll(String.fromCharCode(92), '/'));
 const edge = arg('edge', fileURLToPath(new URL('../demo-app/edge/compat.mjs', import.meta.url)).replaceAll(String.fromCharCode(92), '/'));
 const hintArg = arg('hint', 'Start with the simplest change that fixes the reported input: make the slug regex unicode-aware, with the Unicode property classes for letters and digits. Ship it if the reported input now works.');
